@@ -1,177 +1,280 @@
-// ============================================
-// ELITE CUTTING PROGRAM — SCRIPT
-// ============================================
+const workouts = [
+  {
+    day: 1,
+    title: "Upper",
+    type: "Upper",
+    focus: "Lưng, ngực, vai và tay sau với 2 working sets mỗi bài.",
+    duration: "~60 phút",
+    intensity: "14 sets",
+    note: "Tổng: 14 sets · ~60 phút",
+    exercises: [
+      ["Bent-over Barbell Row", "Barbell tự do", "2 × 6-8", "2"],
+      ["Lat Pulldown", "Lat Pulldown Machine", "2 × 8-12", "2"],
+      ["Incline DB Press", "Dumbbell + ghế nghiêng", "2 × 8-12", "2"],
+      ["Pec Fly", "Rear Delt/Pec Fly Machine", "2 × 12-15", "1-2"],
+      ["Shoulder Press", "Chest/Shoulder Press Machine", "2 × 8-12", "2-3"],
+      ["Cable Lateral Raise", "Cable Machine", "2 × 12-20", "1-2"],
+      ["Rope Triceps Pressdown", "Cable Machine", "2 × 10-15", "1-2"]
+    ]
+  },
+  {
+    day: 2,
+    title: "Lower Posterior",
+    type: "Lower",
+    focus: "Posterior chain: deadlift, hip thrust, lunges, leg curl và core.",
+    duration: "~55 phút",
+    intensity: "12 sets",
+    note: "Tổng: 12 sets · ~55 phút",
+    exercises: [
+      ["Stiff-leg Deadlift", "Barbell tự do", "2 × 6-8", "2"],
+      ["Barbell Hip Thrust", "Barbell + bench", "2 × 8-10", "2"],
+      ["Walking Lunges", "Dumbbell", "2 × 10-12/chân", "2"],
+      ["Prone Leg Curl", "Prone Leg Curl Machine", "2 × 10-15", "1-2"],
+      ["Hyperextension", "Hyperextension Bench", "2 × 10-15", "3"],
+      ["Cable Crunch", "Cable Machine", "2 × 10-15", "2"]
+    ]
+  },
+  {
+    day: 3,
+    title: "Rest + Zone 2",
+    type: "Recovery",
+    focus: "Cardio Zone 2 nhẹ, giãn cơ và mobility để hồi phục.",
+    duration: "25-35 phút",
+    intensity: "Zone 2",
+    note: "Treadmill incline max 6km/h 25-35 phút hoặc Bike Zone 2.",
+    exercises: [
+      ["Treadmill Incline / Bike Zone 2", "Treadmill hoặc Bike", "25-35 phút", "-"],
+      ["Hip Flexor Stretch", "Bodyweight", "2 × 45s/bên", "-"],
+      ["Doorway Chest Stretch", "Bodyweight", "2 × 45s", "-"],
+      ["Wall Slide", "Wall", "2 × 12", "-"],
+      ["Forearm Stretch", "Bodyweight", "2 × 30s/bên", "-"],
+      ["Child's Pose", "Bodyweight", "60s", "-"]
+    ]
+  },
+  {
+    day: 4,
+    title: "Push",
+    type: "Push",
+    focus: "Ngực trên, chest press, vai giữa, Y-flies và tay sau.",
+    duration: "~60 phút",
+    intensity: "14 sets",
+    note: "Tổng: 14 sets · ~60 phút",
+    exercises: [
+      ["Smith Incline Press", "Smith Machine", "2 × 6-10", "2"],
+      ["Chest Press Machine", "Chest/Shoulder Press Machine", "2 × 8-12", "2"],
+      ["Pec Fly", "Rear Delt/Pec Fly Machine", "2 × 12-15", "1-2"],
+      ["Shoulder Press Machine", "Chest/Shoulder Press Machine", "2 × 8-12", "2-3"],
+      ["Cable Lateral Raise", "Cable Machine", "2 × 12-20", "1-2"],
+      ["Y-Flies DB", "Dumbbell + ghế 45°", "2 × 12-15", "2"],
+      ["Overhead Cable Triceps", "Cable Machine", "2 × 10-15", "1-2"]
+    ]
+  },
+  {
+    day: 5,
+    title: "Pull",
+    type: "Pull",
+    focus: "Pulldown, row, rear delt, face pull và biceps.",
+    duration: "~60 phút",
+    intensity: "14 sets",
+    note: "Tổng: 14 sets · ~60 phút",
+    exercises: [
+      ["Lat Pulldown", "Lat Pulldown Machine", "2 × 8-12", "2"],
+      ["Seated Cable Row", "Seated Row Machine", "2 × 8-12", "2"],
+      ["DB One-Arm Row", "Dumbbell + bench", "2 × 8-12", "2"],
+      ["Straight-Arm Cable Pulldown", "Cable Machine", "2 × 12-15", "2"],
+      ["Rear Delt Fly", "Rear Delt/Pec Fly Machine", "2 × 12-20", "1-2"],
+      ["Face Pull", "Cable Machine", "2 × 15-20", "2-3"],
+      ["Biceps Curl DB", "Dumbbell", "2 × 10-15", "2"]
+    ]
+  },
+  {
+    day: 6,
+    title: "Legs",
+    type: "Legs",
+    focus: "Leg press, Smith squat, leg extension/curl và core side plank.",
+    duration: "~65 phút",
+    intensity: "14 sets",
+    note: "Tổng: 14 sets · ~65 phút",
+    exercises: [
+      ["Leg Press", "Leg Press Machine", "2 × 10-15", "2"],
+      ["Smith Squat", "Smith Machine", "2 × 8-12", "2"],
+      ["Leg Extension", "Leg Extension Machine", "2 × 12-15", "1-2"],
+      ["Leg Curl", "Leg Curl Machine", "2 × 10-15", "1-2"],
+      ["Bulgarian Split Squat", "Dumbbell + bench", "2 × 8-10/chân", "2"],
+      ["Hyperextension", "Hyperextension Bench", "2 × 10-15", "3"],
+      ["Side Plank", "Bodyweight", "2 × 30-45s/bên", "-"]
+    ]
+  }
+];
 
-document.addEventListener('DOMContentLoaded', () => {
+const state = {
+  activeDay: 1,
+  complete: JSON.parse(localStorage.getItem("hoang-huy-complete-v4") || "{}"),
+  timerTotal: 90,
+  timerLeft: 90,
+  timerId: null
+};
 
-  // ---- SCROLL REVEAL ----
-  const revealEls = document.querySelectorAll(
-    '.day-card, .principle-card, .champ-card, .section-header'
-  );
+const scheduleGrid = document.querySelector("#scheduleGrid");
+const dayTabs = document.querySelector("#dayTabs");
+const activeDayName = document.querySelector("#activeDayName");
+const activeDayFocus = document.querySelector("#activeDayFocus");
+const activeDayType = document.querySelector("#activeDayType");
+const activeWorkoutTitle = document.querySelector("#activeWorkoutTitle");
+const activeWorkoutNote = document.querySelector("#activeWorkoutNote");
+const exerciseRows = document.querySelector("#exerciseRows");
+const completeToggle = document.querySelector("#completeToggle");
+const weekProgressText = document.querySelector("#weekProgressText");
+const weekProgressBar = document.querySelector("#weekProgressBar");
+const timerDisplay = document.querySelector("#timerDisplay");
+const timerStart = document.querySelector("#timerStart");
+const timerReset = document.querySelector("#timerReset");
 
-  revealEls.forEach(el => el.classList.add('reveal'));
+function renderSchedule() {
+  scheduleGrid.innerHTML = workouts
+    .map(
+      (workout) => `
+        <button class="day-card ${workout.day === state.activeDay ? "is-active" : ""}"
+          data-day="${workout.day}" data-type="${workout.type}" type="button">
+          <span class="day-number">Ngày ${workout.day}</span>
+          <h3>${workout.title}</h3>
+          <p>${workout.focus}</p>
+          <span class="chip-row">
+            <span class="chip">${workout.duration}</span>
+            <span class="chip">${workout.intensity}</span>
+            <span class="chip ${workout.type === "Recovery" ? "orange" : ""}">${workout.type}</span>
+          </span>
+        </button>
+      `
+    )
+    .join("");
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        // Stagger the animation for cards in a grid
-        const siblings = [...entry.target.parentElement.children];
-        const index = siblings.indexOf(entry.target);
-        const delay = (index % 4) * 80;
-
-        setTimeout(() => {
-          entry.target.classList.add('visible');
-        }, delay);
-
-        observer.unobserve(entry.target);
-      }
+  scheduleGrid.querySelectorAll(".day-card").forEach((button) => {
+    button.addEventListener("click", () => {
+      setActiveDay(Number(button.dataset.day), true);
     });
-  }, {
-    threshold: 0.1,
-    rootMargin: '0px 0px -40px 0px'
   });
+}
 
-  revealEls.forEach(el => observer.observe(el));
+function renderTabs() {
+  dayTabs.innerHTML = workouts
+    .map(
+      (workout) => `
+        <button class="day-tab ${workout.day === state.activeDay ? "is-active" : ""}"
+          data-day="${workout.day}" type="button" role="tab"
+          aria-selected="${workout.day === state.activeDay}">
+          D${workout.day}
+        </button>
+      `
+    )
+    .join("");
 
+  dayTabs.querySelectorAll(".day-tab").forEach((button) => {
+    button.addEventListener("click", () => {
+      setActiveDay(Number(button.dataset.day), false);
+    });
+  });
+}
 
-  // ---- ACTIVE DAY HIGHLIGHT ----
-  const dayMap = {
-    1: 'cn', // Sunday
-    2: '2',  // Monday
-    3: '3',
-    4: '4',
-    5: '5',
-    6: '6',
-    7: '7',  // Saturday
-  };
+function renderWorkout() {
+  const workout = workouts.find((item) => item.day === state.activeDay);
 
-  const today = new Date().getDay(); // 0=Sun, 1=Mon ...
-  const dayKey = today === 0 ? 'cn' : String(today + 1);
+  activeDayName.textContent = `Ngày ${workout.day}`;
+  activeDayFocus.textContent = workout.focus;
+  activeDayType.textContent = workout.type;
+  activeWorkoutTitle.textContent = workout.title;
+  activeWorkoutNote.textContent = workout.note;
+  completeToggle.checked = Boolean(state.complete[workout.day]);
 
-  const todayCard = document.querySelector(`.day-card[data-day="${today === 0 ? 'cn' : today + 1}"]`);
-  if (todayCard) {
-    todayCard.style.borderColor = 'rgba(255,61,0,0.6)';
-    todayCard.style.boxShadow = '0 0 40px rgba(255,61,0,0.08)';
+  exerciseRows.innerHTML = workout.exercises
+    .map(
+      ([name, equipment, prescription, rir]) => `
+        <tr>
+          <td data-label="Bài">${name}</td>
+          <td data-label="Máy / Thiết bị">${equipment}</td>
+          <td data-label="Sets × Reps">${prescription}</td>
+          <td data-label="RIR">${rir}</td>
+        </tr>
+      `
+    )
+    .join("");
 
-    // Add "HÔM NAY" badge
-    const dayLabel = todayCard.querySelector('.day-label');
-    if (dayLabel) {
-      const todayBadge = document.createElement('span');
-      todayBadge.textContent = '● HÔM NAY';
-      todayBadge.style.cssText = `
-        font-family: var(--font-mono, monospace);
-        font-size: 9px;
-        letter-spacing: 0.15em;
-        color: #ff3d00;
-        margin-left: auto;
-        animation: blink 1.5s ease-in-out infinite;
-      `;
-      dayLabel.appendChild(todayBadge);
-    }
+  updateProgress();
+}
+
+function updateProgress() {
+  const completed = workouts.filter((workout) => state.complete[workout.day]).length;
+  const percent = Math.round((completed / workouts.length) * 100);
+  weekProgressText.textContent = `${completed}/${workouts.length}`;
+  weekProgressBar.style.width = `${percent}%`;
+}
+
+function setActiveDay(day, scrollToWorkout) {
+  state.activeDay = day;
+  renderSchedule();
+  renderTabs();
+  renderWorkout();
+  resetTimer();
+
+  if (scrollToWorkout) {
+    document.querySelector("#workout").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
+function persistCompletion() {
+  localStorage.setItem("hoang-huy-complete-v4", JSON.stringify(state.complete));
+}
+
+function formatTime(seconds) {
+  const mins = String(Math.floor(seconds / 60)).padStart(2, "0");
+  const secs = String(seconds % 60).padStart(2, "0");
+  return `${mins}:${secs}`;
+}
+
+function updateTimerDisplay() {
+  timerDisplay.textContent = formatTime(state.timerLeft);
+}
+
+function startTimer() {
+  if (state.timerId) {
+    clearInterval(state.timerId);
+    state.timerId = null;
+    timerStart.textContent = "Start";
+    return;
   }
 
+  timerStart.textContent = "Pause";
+  state.timerId = setInterval(() => {
+    state.timerLeft -= 1;
+    updateTimerDisplay();
 
-  // ---- EXERCISE HOVER GLOW ----
-  document.querySelectorAll('.exercise').forEach(ex => {
-    ex.addEventListener('mouseenter', () => {
-      ex.style.backgroundColor = 'rgba(255,61,0,0.03)';
-    });
-    ex.addEventListener('mouseleave', () => {
-      ex.style.backgroundColor = '';
-    });
-  });
-
-
-  // ---- PRINCIPLE CARD CLICK EXPAND ----
-  document.querySelectorAll('.principle-card').forEach(card => {
-    card.style.cursor = 'pointer';
-    const p = card.querySelector('p');
-    p.style.overflow = 'hidden';
-
-    card.addEventListener('click', () => {
-      const isExpanded = card.dataset.expanded === 'true';
-      card.dataset.expanded = !isExpanded;
-      card.style.borderColor = isExpanded ? '' : 'rgba(212,175,55,0.5)';
-    });
-  });
-
-
-  // ---- SMOOTH PROGRESS INDICATOR ----
-  const progressBar = document.createElement('div');
-  progressBar.style.cssText = `
-    position: fixed;
-    top: 0; left: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #ff3d00, #d4af37);
-    z-index: 9999;
-    width: 0%;
-    transition: width 0.1s linear;
-  `;
-  document.body.appendChild(progressBar);
-
-  window.addEventListener('scroll', () => {
-    const scrollTop = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = (scrollTop / docHeight) * 100;
-    progressBar.style.width = progress + '%';
-  });
-
-
-  // ---- BLINK ANIMATION ----
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
+    if (state.timerLeft <= 0) {
+      resetTimer();
     }
-  `;
-  document.head.appendChild(style);
+  }, 1000);
+}
 
-
-  // ---- COPY SCHEDULE ----
-  // Long press on day card copies exercise list as text (mobile friendly)
-  document.querySelectorAll('.day-card').forEach(card => {
-    let pressTimer;
-
-    card.addEventListener('touchstart', () => {
-      pressTimer = setTimeout(() => {
-        const title = card.querySelector('.day-title')?.textContent || '';
-        const exercises = [...card.querySelectorAll('.ex-name')].map(e => e.textContent.trim());
-        if (exercises.length === 0) return;
-
-        const text = `${title}\n${exercises.map((e, i) => `${i+1}. ${e}`).join('\n')}`;
-        navigator.clipboard?.writeText(text).then(() => {
-          showToast('Đã copy lịch tập!');
-        });
-      }, 600);
-    });
-
-    card.addEventListener('touchend', () => clearTimeout(pressTimer));
-    card.addEventListener('touchmove', () => clearTimeout(pressTimer));
-  });
-
-
-  // ---- TOAST NOTIFICATION ----
-  function showToast(msg) {
-    const toast = document.createElement('div');
-    toast.textContent = msg;
-    toast.style.cssText = `
-      position: fixed;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #ff3d00;
-      color: white;
-      font-family: monospace;
-      font-size: 12px;
-      letter-spacing: 0.1em;
-      padding: 10px 24px;
-      border-radius: 2px;
-      z-index: 10000;
-      animation: fadeUp 0.3s ease;
-    `;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 2500);
+function resetTimer() {
+  if (state.timerId) {
+    clearInterval(state.timerId);
   }
 
+  state.timerId = null;
+  state.timerLeft = state.timerTotal;
+  timerStart.textContent = "Start";
+  updateTimerDisplay();
+}
+
+completeToggle.addEventListener("change", () => {
+  state.complete[state.activeDay] = completeToggle.checked;
+  persistCompletion();
+  updateProgress();
 });
+
+timerStart.addEventListener("click", startTimer);
+timerReset.addEventListener("click", resetTimer);
+
+renderSchedule();
+renderTabs();
+renderWorkout();
+updateTimerDisplay();
